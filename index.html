@@ -10,7 +10,7 @@
 
 <body>
 
-    <div class="title">
+    <div class="title" id="title">
         <h1>Youth Opinion Poll</h1>
         <p class="subhead">Share which candidate you feel best represents your interests and priorities as a young
             person in our city.<br><br>Tap a candidate for more information, and click "vote" to show your support!</p>
@@ -59,7 +59,7 @@
         <button class="next" onclick="resetScreen()">Next voter →</button>
     </div>
 
-    <div class="footer-wrapper">
+    <div class="footer-wrapper" id="footer">
         <footer>
             <img class="logo"
                 src="./images/TE-Logo-Horizontal-Somerville-White__TE-Logo-Horizontal-Somerville-White.png">
@@ -132,7 +132,10 @@
         function resetScreen() {
             // Note: This will let the same device vote again
             localStorage.removeItem("hasVoted"); // remove if you want next voter to be able to vote
+
             document.getElementById("thankyou").style.display = "none";
+            document.getElementById("title").style.display = "block";
+            document.getElementById("footer").style.display = "block";
             document.querySelectorAll(".candidates").forEach(el => {
                 el.style.display = "";
                 el.classList.remove('flipped');
