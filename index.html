@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Youth Voice Poll</title>
+    <link type="text/css" rel="stylesheet" href="./styles.css/style2.css">
+</head>
+
+<body>
+
+    <div class="title">
+        <h1>Youth Opinion Poll</h1>
+        <p class="subhead">Share which candidate you feel best represents your interests and priorities as a young
+            person in our city.<br><br>Tap a candidate for more information, and click "vote" to show your support!</p>
+    </div>
+
+    <div class="candidates" id="candidates">
+        <div class="candidate">
+            <div class="candidate-front">
+                <img src="./images/WBJ2.jpeg" alt="Candidate 1" />
+                <div class="info">
+                    <h2>Willie Burnely Jr.</h2>
+                    <button onclick="castVote('willie')">Vote for Willie</button>
+                </div>
+            </div>
+
+            <div class="candidate-back">
+                <p>Focus: Affordable Housing. Lorem, ipsum dolor sit amet consectetur adipisicing elit. A ad, ut alias
+                    sapiente, exercitationem, praesentium voluptatibus laboriosam amet cum unde id voluptatem dolorem
+                    quibusdam culpa natus dolorum perspiciatis velit voluptate.</p>
+            </div>
+        </div>
+
+        <div class="candidate">
+            <div class="candidate-front">
+                <img src="./images/JW.jpeg" alt="Candidate 2" />
+                <div class="info">
+                    <h2>Jake Wilson</h2>
+                    <button onclick="castVote('jake')">Vote for Jake</button>
+                </div>
+            </div>
+
+            <div class="candidate-back">
+                <p>"I'm running to be the Mayor for all of Somerville. I've worked with our youth for over a decade now -- on the soccer pitch, in our schools, and out in the community. I'm committed to making Somerville a place where our young people get the spaces, programs, and guidance they need to thrive and give our city a bright future. As Mayor, I'll make sure the youth of Somerville are in the room and at the table when we're making important decisions that impact them."</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="thankyou">
+        <h2>Thanks for voting!</h2>
+        <p>Your voice matters.</p>
+        <div class="ig">
+            <p>Follow us on Instagram, and stay tuned for the results!</p>
+            <a href="https://www.instagram.com/te.ville.youth?igsh=MWF1ZHJ1enZxMnhybg=="><img class="qr"
+                    src="./images/IGQR.jpeg"></a>
+        </div>
+        <button class="next" onclick="resetScreen()">Next voter →</button>
+    </div>
+
+    <div class="footer-wrapper">
+        <footer>
+            <img class="logo"
+                src="./images/TE-Logo-Horizontal-Somerville-White__TE-Logo-Horizontal-Somerville-White.png">
+        </footer>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <!-- Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBTBw0b8wsnyd7KwEQl_alLZx4-8DGUDkw",
+            authDomain: "youth-mock-election.firebaseapp.com",
+            projectId: "youth-mock-election",
+            storageBucket: "youth-mock-election.firebasestorage.app",
+            messagingSenderId: "194883784425",
+            appId: "1:194883784425:web:2badf444f36439eb866a78"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Check if device already voted on page load
+        window.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem("hasVoted") === "true") {
+                // Hide candidates, show thank-you immediately
+                document.querySelectorAll(".candidates").forEach(el => el.style.display = "none");
+                document.getElementById("thankyou").style.display = "block";
+            }
+        });
+
+        async function castVote(candidateId) {
+            // Prevent multiple votes
+            if (localStorage.getItem("hasVoted") === "true") {
+                alert("You have already voted. Thank you!");
+                return;
+            }
+
+            // Save vote to Firestore
+            try {
+                await db.collection("votes").add({
+                    candidate: candidateId,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                console.log("Vote recorded!");
+            } catch (err) {
+                console.error("Error saving vote:", err);
+            }
+
+            // Set localStorage flag
+            localStorage.setItem("hasVoted", "true");
+
+            // Display Thank You, Confetti
+            document.querySelectorAll(".candidates").forEach(el => el.style.display = "none");
+            document.getElementById("thankyou").style.display = "block";
+
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+        }
+
+        function resetScreen() {
+            // Note: This will let the same device vote again
+            localStorage.removeItem("hasVoted"); // remove if you want next voter to be able to vote
+            document.getElementById("thankyou").style.display = "none";
+            document.querySelectorAll(".candidates").forEach(el => {
+                el.style.display = "";
+                el.classList.remove('flipped');
+            });
+        }
+
+        /* ------------------ flip behavior (per-card) ------------------ */
+        // toggles flip for the clicked card only; clicking a Vote button won't flip
+        document.querySelectorAll('.candidate').forEach(card => {
+            // make card keyboard-focusable for accessibility
+            card.setAttribute('tabindex', '0');
+
+            card.addEventListener('click', (e) => {
+                // if the click came from a button (or inside a button), don't flip
+                if (e.target.closest('button')) return;
+                card.classList.toggle('flipped');
+            });
+
+            // keyboard: space or enter toggles flip
+            card.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    card.classList.toggle('flipped');
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

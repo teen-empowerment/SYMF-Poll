@@ -1,0 +1,208 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    background: lightgray;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.title {
+    width: 85%;
+    height: auto;
+    background-color: white;
+    border-radius: 12px;
+    border: 3px solid rgb(183, 0, 0);
+    margin: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 6px rgb(0, 0, 0);
+    /* background: linear-gradient(135deg, #b70000 0%, #b70000 0%, white 25%, white 75%, #b70000 100%, #b70000 100%); */
+}
+
+h1 {
+    color: rgb(183, 0, 0);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.subhead {
+    color: rgb(183, 0, 0);
+    font-size: 1rem;
+    margin-top: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.candidates {
+    display: grid;
+    grid-template-columns: 1fr;
+    perspective: 1000px;
+    max-width: 90%;
+    margin: auto;
+    /* perspective for 3D flip (applies to transformed children) */
+    padding-bottom: 1rem;
+}
+
+.candidate {
+    background: whitesmoke;
+    width: 75%;
+    border: 3px solid rgb(183, 0, 0);
+    border-radius: 12px;
+    padding: 1rem;
+    margin: auto;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 6px rgb(0, 0, 0);
+    transition: 0.5s;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+.candidate-front,
+.candidate-back {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Card height is driven by front content) */
+.candidate-front {
+    position: relative;
+    z-index: 2;
+    display: block;
+    /* will become flex in portrait via media query below */
+}
+
+.candidate-back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* fill the same interior area used by the front (inside padding/border) */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotateY(180deg);
+    /* back is pre-rotated so it reads correctly when card is flipped */
+    padding: inherit;
+    /* match the parent's padding so layout lines up */
+    box-sizing: border-box;
+    background: whitesmoke;
+    border-radius: 12px;
+}
+
+/* toggling the flipped class rotates the entire card */
+.candidate.flipped {
+    transform: rotateY(180deg);
+}
+
+.candidate img {
+    max-width: 220px;
+    border-radius: 8px;
+    border: 3px solid navy;
+}
+
+button {
+    display: block;
+    margin: 1rem auto 0;
+    padding: 0.75rem;
+    font-size: 1.2rem;
+    border: 3px solid black;
+    border-radius: 8px;
+    background: rgb(183, 0, 0);
+    color: white;
+    cursor: pointer;
+}
+
+#thankyou {
+    display: none;
+    font-size: large;
+    margin: auto;
+    max-width: 90%;
+}
+
+.qr {
+    height: 200px;
+    border: 2px solid black;
+    border-radius: 12px;
+}
+
+.footer-wrapper {
+    position: relative; /* establishes positioning context for the footer */
+    width: 100%;
+    height: 80px;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgb(183, 0, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo {
+    height: 80%;
+}
+
+/* Style the back-side paragraph */
+.candidate-back p {
+    margin: 0;
+    font-size: 1.05rem;
+    text-align: center;
+}
+
+.next {
+    display: block;
+    margin: 1rem auto;
+}
+
+@media (min-width: 768px) {
+    /* Styles for tablets in landscape or small laptops */
+    .title {
+        width: 65%;
+        height: auto;
+        background-color: white;
+        border-radius: 12px;
+        border: 3px solid rgb(183, 0, 0);
+        margin: auto;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 2px 6px rgb(0, 0, 0);
+        background: linear-gradient(135deg, #b70000 0%, #b70000 0%, white 25%, white 75%, #b70000 100%, #b70000 100%);
+    }
+
+    h1 {
+        color: rgb(183, 0, 0);
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .subhead {
+        color: rgb(183, 0, 0);
+        font-size: 1.5rem;
+        margin-top: 0;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .candidates {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        perspective: 1000px;
+        max-width: 90%;
+        margin: auto;
+        /* perspective for 3D flip (applies to transformed children) */
+        padding-bottom: 5rem;
+        padding-top: 1rem;
+        gap: 1rem;
+    }
+
+  }
