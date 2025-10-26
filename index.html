@@ -119,6 +119,8 @@
             // Display Thank You, Confetti
             document.querySelectorAll(".candidates").forEach(el => el.style.display = "none");
             document.getElementById("thankyou").style.display = "block";
+            document.getElementById("title").style.display = "none";
+            document.getElementById("footer").style.display = "none";
 
             confetti({
                 particleCount: 100,
